@@ -10,10 +10,10 @@ public class Main {
 
         while (true){
             System.out.println("--- Welcome To ISO-Store ---");
-            System.out.println("Select the action you want to perform");
             System.out.println("1 - Customer add");
             System.out.println("2 - Login");
             System.out.println("0 - Exit");
+            System.out.print("Select the action you want to perform: ");
 
             String choice = in.nextLine();
 
@@ -24,7 +24,7 @@ public class Main {
                 case "2":
                     loginCustomer(in);
                     break;
-                case 0:
+                case "0":
                     System.out.println("Bye Bye!");
                     return;
                 default:

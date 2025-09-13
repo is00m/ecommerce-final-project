@@ -8,8 +8,8 @@ public class CustomerService {
 
     private CustomerDAO customerDAO;
 
-    public CustomerService(CustomerDAO customerDAO) {
-        this.customerDAO = customerDAO;
+    public CustomerService(){
+        customerDAO = new CustomerDAO();
     }
 
     public void save(String firstName, String lastName, String email, String password){
