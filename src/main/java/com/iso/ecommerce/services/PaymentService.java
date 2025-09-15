@@ -3,7 +3,7 @@ package com.iso.ecommerce.services;
 import com.iso.ecommerce.dao.PaymentDao;
 import com.iso.ecommerce.model.Order;
 import com.iso.ecommerce.model.Payment;
-import com.iso.ecommerce.model.PaymentMethod;
+import com.iso.ecommerce.model.enums.PaymentMethod;
 
 public class PaymentService {
 

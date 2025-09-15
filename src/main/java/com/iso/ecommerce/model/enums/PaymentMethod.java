@@ -1,4 +1,4 @@
-package com.iso.ecommerce.model;
+package com.iso.ecommerce.model.enums;
 
 public enum PaymentMethod {
 

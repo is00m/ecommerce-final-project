@@ -1,6 +1,8 @@
 package com.iso.ecommerce.model;
 
 
+import com.iso.ecommerce.model.enums.PaymentMethod;
+
 import java.math.BigDecimal;
 
 public class Payment extends BaseModel{
