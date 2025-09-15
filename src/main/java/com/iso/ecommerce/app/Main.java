@@ -42,7 +42,7 @@ public class Main {
 
     private static void getCustomerMenu() throws ISOStoreException {
         while (true){
-            System.out.println("--- Customer PANEL ---");
+            System.out.println("--- CUSTOMER PANEL ---");
             System.out.println("1 - Register");
             System.out.println("2 - Login");
             System.out.println("0 - Previous menu");
@@ -66,7 +66,7 @@ public class Main {
 
     private static void getUserMenu() throws ISOStoreException {
         while (true){
-            System.out.println("--- User PANEL ---");
+            System.out.println("--- USER PANEL ---");
             System.out.println("1 - Register");
             System.out.println("2 - Login");
             System.out.println("0 - Previous menu");
@@ -94,7 +94,22 @@ public class Main {
         System.out.print("Enter your password: ");
         String password = in.nextLine();
 
-        userService.login(username,password);
+        User loginedUser = userService.login(username, password);
+
+        if (loginedUser != null && loginedUser.getActive()){
+
+            getLoginedUserMenu();
+        }
+    }
+
+    private static void getLoginedUserMenu() {
+        System.out.println("--- ADMIN PANEL ---");
+        System.out.println("1 - Create category");
+        System.out.println("2 - Delete category");
+        System.out.println("3 - Create product");
+        System.out.println("4 - Delete product");
+        System.out.println("0 - Previous");
+        System.out.print("Select your login type: ");
     }
 
     private static void registerUser() throws ISOStoreException {

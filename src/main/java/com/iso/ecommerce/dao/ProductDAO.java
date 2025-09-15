@@ -1,7 +1,11 @@
 package com.iso.ecommerce.dao;
+
 import com.iso.ecommerce.dao.constants.SqlScriptConstants;
+import com.iso.ecommerce.model.Category;
 import com.iso.ecommerce.model.Product;
+import com.iso.ecommerce.model.User;
 import com.iso.ecommerce.util.DBUtil;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,19 @@ public class ProductDAO implements BaseDAO<Product> {
 
     @Override
     public void save(Product product) {
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SqlScriptConstants.PRODUCT_SAVE)) {
+
+            ps.setString(1, product.getName());
+            ps.setBigDecimal(2, product.getPrice());
+            ps.setInt(3, product.getStock());
+            ps.setLong(4, product.getCategory().getId());
+            ps.setLong(5, product.getCreatedUser().getId());
+            ps.setLong(6, product.getUpdatedUser().getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 

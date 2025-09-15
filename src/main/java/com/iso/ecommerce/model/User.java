@@ -2,8 +2,7 @@ package com.iso.ecommerce.model;
 
 import com.iso.ecommerce.model.enums.Role;
 
-public class User {
-    private long id;
+public class User extends BaseModel {
     private String username;
     private String passwrd;
     private Role role;
@@ -24,14 +23,6 @@ public class User {
         this.passwrd = passwrd;
         this.role = role;
         this.active = true;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getUsername() {
@@ -69,8 +60,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
+                "username='" + username + '\'' +
                 ", passwrd='" + passwrd + '\'' +
                 ", role=" + role +
                 ", active=" + active +

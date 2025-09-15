@@ -31,6 +31,11 @@ public class SqlScriptConstants {
             VALUE (?,?,?)
             """;
 
+    public static final String PRODUCT_SAVE = """
+            INSERT INTO product (name, price, stock, category_id, created_by, updated_by)
+            VALUE (?,?,?,?,?,?)
+            """;
+
     public static final String PRODUCT_SEARCH_BY_NAME = """
             SELECT * FROM product
             WHERE name LIKE ?
@@ -44,5 +49,10 @@ public class SqlScriptConstants {
     public static final String USER_FIND_BY_USERNAME = """
             SELECT * FROM users
             WHERE username = ?
+            """;
+
+    public static final String CATEGORY_SAVE = """
+            INSERT INTO category (name, created_by, updated_by)
+            VALUES (?,?,?)
             """;
 }

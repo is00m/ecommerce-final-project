@@ -25,7 +25,7 @@ public class UserService {
         System.out.println("Registration successful!");
     }
 
-    public void login(String username, String password) throws ISOStoreException {
+    public User login(String username, String password) throws ISOStoreException {
         User foundUser = userDao.findByUsername(username);
 
         if (foundUser != null) {
@@ -36,5 +36,6 @@ public class UserService {
         } else throw new ISOStoreException(ExceptionMessages.LOGIN_FAILED);
         System.out.println("Login successful!");
         System.out.println("Welcome " + foundUser.getUsername() + "!");
+        return foundUser;
     }
 }

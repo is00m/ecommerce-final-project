@@ -1,6 +1,11 @@
 package com.iso.ecommerce.services;
 
 import com.iso.ecommerce.dao.ProductDAO;
+import com.iso.ecommerce.exception.ExceptionMessages;
+import com.iso.ecommerce.exception.ISOStoreException;
+import com.iso.ecommerce.model.Product;
+import com.iso.ecommerce.model.User;
+import com.iso.ecommerce.model.enums.Role;
 
 public class ProductService {
 
@@ -8,5 +13,18 @@ public class ProductService {
 
     public ProductService() {
         this.productDAO = new ProductDAO();
+    }
+
+    public void save(Product product, User user) throws ISOStoreException {
+
+        if (!Role.ADMIN.equals(user.getRole())){
+            throw new ISOStoreException(ExceptionMessages.NO_PERMISSION);
+        }
+
+        product.setCreatedUser(user);
+        product.setUpdatedUser(user);
+        productDAO.save(product);
+        System.out.println("Product successfully saved!");
+
     }
 }

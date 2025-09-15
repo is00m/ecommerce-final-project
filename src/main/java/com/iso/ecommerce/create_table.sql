@@ -3,7 +3,9 @@ CREATE TABLE category
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(255) NOT NULL,
 	created_date DATE DEFAULT CURRENT_DATE,
-	updated_date DATE DEFAULT CURRENT_DATE
+	updated_date DATE DEFAULT CURRENT_DATE,
+	created_by INT REFERENCES users(id),
+	updated_by INT REFERENCES users(id)
 );
 
 CREATE TABLE product
@@ -14,7 +16,9 @@ CREATE TABLE product
 	stock INT,
 	category_id INT REFERENCES category(id),
 	created_date DATE DEFAULT CURRENT_DATE,
-	updated_date DATE DEFAULT CURRENT_DATE
+	updated_date DATE DEFAULT CURRENT_DATE,
+	created_by INT REFERENCES users(id),
+	updated_by INT REFERENCES users(id)
 );
 
 CREATE TABLE customer
@@ -54,4 +58,6 @@ CREATE TABLE users(
 	passwrd VARCHAR(200) NOT NULL,
 	role VARCHAR(100) NOT NULL,
 	active BOOLEAN DEFAULT TRUE
+	created_date DATE DEFAULT CURRENT_DATE,
+	updated_date DATE DEFAULT CURRENT_DATE
 );

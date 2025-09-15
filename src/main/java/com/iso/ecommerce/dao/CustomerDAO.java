@@ -34,8 +34,8 @@ public class CustomerDAO implements BaseDAO<Customer> {
                     customer.setFirstName(rs.getString("first_name"));
                     customer.setLastName(rs.getString("last_name"));
                     customer.setEmail(rs.getString("email"));
-                    customer.setCreatedDate(new Timestamp(rs.getDate("created_date").getTime()).toLocalDateTime());
-                    customer.setUpdatedDate(new Timestamp(rs.getDate("updated_date").getTime()).toLocalDateTime());
+                    customer.setCreatedDate(rs.getTimestamp("created_date").toLocalDateTime());
+                    customer.setUpdatedDate(rs.getTimestamp("updated_date").toLocalDateTime());
                 }
             }
         } catch (SQLException e) {
