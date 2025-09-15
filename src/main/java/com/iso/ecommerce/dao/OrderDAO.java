@@ -1,28 +1,39 @@
 package com.iso.ecommerce.dao;
 
+import com.iso.ecommerce.dao.constants.SqlScriptConstants;
 import com.iso.ecommerce.model.Order;
+import com.iso.ecommerce.util.DBUtil;
 
 import java.sql.*;
 
-public class OrderDAO {
-    String url = "jdbc:postgresql://localhost:5432/ecommerce";
-
-    private final String saveScript = """
-            INSERT INTO "/order/" (customer_id, total_amount, order_date, created_date, updated_date)
-            VALUES (?,?,?,?,?)
-            """;
+public class OrderDAO implements BaseDAO<Order>{
 
     public void save(Order order) {
-        try (Connection connection = DriverManager.getConnection(url);
-             PreparedStatement ps = connection.prepareStatement(saveScript)) {
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SqlScriptConstants.ORDER_SAVE)) {
 
             ps.setLong(1, order.getCustomer().getId());
             ps.setBigDecimal(2, order.getTotalAmount());
-            ps.setTimestamp(3, java.sql.Timestamp.valueOf(order.getOrderDate()));
+            ps.setTimestamp(3, Timestamp.valueOf(order.getOrderDate()));
 
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public Order findById(long id) {
+        return null;
+    }
+
+    @Override
+    public void update(Order order) {
+
+    }
+
+    @Override
+    public void delete(long id) {
+
     }
 }

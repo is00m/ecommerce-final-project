@@ -1,39 +1,15 @@
 package com.iso.ecommerce.dao;
 
+import com.iso.ecommerce.dao.constants.SqlScriptConstants;
 import com.iso.ecommerce.model.Customer;
+import com.iso.ecommerce.util.DBUtil;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-
-public class CustomerDAO {
-    String url = "jdbc:postgresql://localhost:5432/ecommerce";
-
-    private final String saveScript = """
-            INSERT INTO customer (first_name, last_name, email, passwrd)
-            VALUES (?,?,?,?)
-            """;
-
-    private final String findByIdScript = """
-            SELECT * FROM customer
-            WHERE id = ?
-            """;
-
-    private final String existByEmailScript = """
-            SELECT * FROM customer
-            WHERE email = ?
-            LIMIT 1
-            """;
-
-    private final String existByPasswordScript = """
-            SELECT * FROM customer
-            WHERE password = ?
-            LIMIT 1
-            """;
+public class CustomerDAO implements BaseDAO<Customer> {
 
     public void save(Customer customer) {
-        try (Connection connection = DriverManager.getConnection(url);
-             PreparedStatement ps = connection.prepareStatement(saveScript)) {
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SqlScriptConstants.CUSTOMER_SAVE)) {
 
             ps.setString(1, customer.getFirstName());
             ps.setString(2, customer.getLastName());
@@ -47,8 +23,8 @@ public class CustomerDAO {
 
     public Customer findById(long id) {
         Customer customer = null;
-        try (Connection connection = DriverManager.getConnection(url);
-             PreparedStatement ps = connection.prepareStatement(findByIdScript)) {
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SqlScriptConstants.CUSTOMER_FIND_BY_ID)) {
 
             ps.setLong(1, id);
             try (ResultSet rs = ps.executeQuery();) {
@@ -68,9 +44,19 @@ public class CustomerDAO {
         return customer;
     }
 
+    @Override
+    public void update(Customer customer) {
+
+    }
+
+    @Override
+    public void delete(long id) {
+
+    }
+
     public boolean existByEmail(String email) {
-        try (Connection connection = DriverManager.getConnection(url);
-             PreparedStatement ps = connection.prepareStatement(existByEmailScript)) {
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SqlScriptConstants.CUSTOMER_EXIST_BY_EMAIL)) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next();
@@ -83,8 +69,8 @@ public class CustomerDAO {
 
     public Customer findByEmail(String email) {
         Customer customer = null;
-        try (Connection connection = DriverManager.getConnection(url);
-             PreparedStatement ps = connection.prepareStatement(existByEmailScript)) {
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SqlScriptConstants.CUSTOMER_EXIST_BY_EMAIL)) {
             ps.setString(1, email);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -95,8 +81,8 @@ public class CustomerDAO {
                     customer.setLastName(rs.getString("last_name"));
                     customer.setEmail(rs.getString("email"));
                     customer.setPassword(rs.getString("passwrd"));
-                    customer.setCreatedDate(new Timestamp(rs.getDate("created_date").getTime()).toLocalDateTime());
-                    customer.setUpdatedDate(new Timestamp(rs.getDate("updated_date").getTime()).toLocalDateTime());
+                    customer.setCreatedDate(rs.getTimestamp("created_date").toLocalDateTime());
+                    customer.setUpdatedDate(rs.getTimestamp("updated_date").toLocalDateTime());
                 }
             }
         } catch (SQLException e) {
