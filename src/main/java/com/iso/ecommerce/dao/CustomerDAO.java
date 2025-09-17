@@ -5,6 +5,9 @@ import com.iso.ecommerce.model.Customer;
 import com.iso.ecommerce.util.DBUtil;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
 public class CustomerDAO implements BaseDAO<Customer> {
 
     public void save(Customer customer) {
@@ -42,6 +45,30 @@ public class CustomerDAO implements BaseDAO<Customer> {
             e.printStackTrace();
         }
         return customer;
+    }
+
+    public List<Customer> findAll(){
+        List<Customer> customers = new ArrayList<>();
+        try (Connection connection = DBUtil.getConnection();
+             Statement s = connection.createStatement()) {
+
+            try (ResultSet rs = s.executeQuery(SqlScriptConstants.CUSTOMER_FIND_ALL)) {
+                while (rs.next()) {
+                    Customer customer = new Customer();
+                    customer.setId(rs.getLong("id"));
+                    customer.setFirstName(rs.getString("first_name"));
+                    customer.setLastName(rs.getString("last_name"));
+                    customer.setEmail(rs.getString("email"));
+                    customer.setCreatedDate(rs.getTimestamp("created_date").toLocalDateTime());
+                    customer.setUpdatedDate(rs.getTimestamp("updated_date").toLocalDateTime());
+
+                    customers.add(customer);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return customers;
     }
 
     @Override

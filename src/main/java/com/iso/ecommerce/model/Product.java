@@ -11,6 +11,14 @@ public class Product  extends BaseModel{
     public Product() {
     }
 
+    public Product(Long id, String name, BigDecimal price, int stock, Category category) {
+        this.setId(id);
+        this.name = name;
+        this.price = price;
+        this.stock = stock;
+        this.category = category;
+    }
+
     public Product(String name, BigDecimal price, int stock, Category category) {
         this.name = name;
         this.price = price;
@@ -48,5 +56,16 @@ public class Product  extends BaseModel{
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id='" + getId() + '\'' +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", stock=" + stock +
+                ", category=" + category +
+                '}';
     }
 }

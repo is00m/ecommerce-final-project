@@ -6,6 +6,8 @@ import com.iso.ecommerce.model.enums.Role;
 import com.iso.ecommerce.util.DBUtil;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO implements BaseDAO<User> {
 
@@ -29,6 +31,33 @@ public class UserDAO implements BaseDAO<User> {
     @Override
     public User findById(long id) {
         return null;
+    }
+
+    @Override
+    public List<User> findAll() {
+        List<User> users = new ArrayList<>();
+        try (Connection connection = DBUtil.getConnection();
+             Statement s = connection.createStatement()) {
+
+            try (ResultSet rs = s.executeQuery(SqlScriptConstants.USER_FIND_ALL)) {
+                while (rs.next()) {
+                    User user = new User();
+                    user.setId(rs.getLong("id"));
+                    user.setUsername(rs.getString("username"));
+                    user.setPasswrd(rs.getString("passwrd"));
+                    user.setRole(Role.valueOf(rs.getString("role")));
+                    user.setActive(rs.getBoolean("active"));
+                    user.setCreatedDate(rs.getTimestamp("created_date").toLocalDateTime());
+                    user.setUpdatedDate(rs.getTimestamp("updated_date").toLocalDateTime());
+
+                    users.add(user);
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return users;
     }
 
     @Override

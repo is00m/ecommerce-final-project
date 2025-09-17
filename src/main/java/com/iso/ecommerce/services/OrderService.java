@@ -8,11 +8,11 @@ import com.iso.ecommerce.model.Product;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class OrderServices {
+public class OrderService {
 
     private final OrderDAO orderDAO;
 
-    public OrderServices() {
+    public OrderService() {
         this.orderDAO = new OrderDAO();
     }
 
@@ -29,5 +29,9 @@ public class OrderServices {
         orderDAO.save(order);
 
         return order;
+    }
+
+    public List<Order> getAll() {
+        return orderDAO.findAll();
     }
 }

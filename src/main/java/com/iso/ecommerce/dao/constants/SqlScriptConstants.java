@@ -15,6 +15,10 @@ public class SqlScriptConstants {
             WHERE id = ?
             """;
 
+    public  static  final String CUSTOMER_FIND_ALL = """
+            SELECT * FROM customer
+            """;
+
     public static final String CUSTOMER_EXIST_BY_EMAIL = """
             SELECT * FROM customer
             WHERE email = ?
@@ -26,19 +30,41 @@ public class SqlScriptConstants {
             VALUES (?,?,?)
             """;
 
+    public static final String ORDER_FIND_ALL = """
+            SELECT o.id AS order_id
+                   
+            FROM order o, category c
+            """;
+
     public static final String PAYMENT_SAVE = """
             INSERT INTO payment (order_id, payment_method, amount)
-            VALUE (?,?,?)
+            VALUES (?,?,?)
             """;
 
     public static final String PRODUCT_SAVE = """
             INSERT INTO product (name, price, stock, category_id, created_by, updated_by)
-            VALUE (?,?,?,?,?,?)
+            VALUES (?,?,?,?,?,?)
+            """;
+
+    public static final String PRODUCT_DELETE = """
+            DELETE FROM product
+            WHERE id = ?
             """;
 
     public static final String PRODUCT_SEARCH_BY_NAME = """
             SELECT * FROM product
             WHERE name LIKE ?
+            """;
+
+    public  static  final String PRODUCT_FIND_ALL = """
+            SELECT p.id AS id,
+                   p.name AS name,
+                   p.price AS price,
+                   p.stock AS stock,
+                   c.id AS category_id,
+                   c.name AS category_name
+            FROM product p, category c
+            WHERE p.category_id = c.id
             """;
 
     public static final String USER_SAVE = """
@@ -51,8 +77,26 @@ public class SqlScriptConstants {
             WHERE username = ?
             """;
 
+    public  static  final String USER_FIND_ALL = """
+            SELECT * FROM users
+            """;
+
     public static final String CATEGORY_SAVE = """
             INSERT INTO category (name, created_by, updated_by)
             VALUES (?,?,?)
+            """;
+
+    public static final String CATEGORY_DELETE = """
+            DELETE FROM category
+            WHERE id = ?
+            """;
+
+    public  static  final String CATEGORY_FIND_BY_ID = """
+            SELECT * FROM category
+            WHERE id = ?
+            """;
+
+    public  static  final String CATEGORY_FIND_ALL = """
+            SELECT * FROM category
             """;
 }

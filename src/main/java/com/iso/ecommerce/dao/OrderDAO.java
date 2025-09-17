@@ -5,8 +5,10 @@ import com.iso.ecommerce.model.Order;
 import com.iso.ecommerce.util.DBUtil;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class OrderDAO implements BaseDAO<Order>{
+public class OrderDAO implements BaseDAO<Order> {
 
     public void save(Order order) {
         try (Connection connection = DBUtil.getConnection();
@@ -25,6 +27,19 @@ public class OrderDAO implements BaseDAO<Order>{
     @Override
     public Order findById(long id) {
         return null;
+    }
+
+    @Override
+    public List<Order> findAll() {
+        List<Order> orderList = new ArrayList<>();
+        try (Connection connection = DBUtil.getConnection();
+             Statement s = connection.createStatement()) {
+
+            s.executeQuery(SqlScriptConstants.ORDER_FIND_ALL)
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

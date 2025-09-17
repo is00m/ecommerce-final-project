@@ -6,6 +6,7 @@ import com.iso.ecommerce.model.Payment;
 import com.iso.ecommerce.util.DBUtil;
 
 import java.sql.*;
+import java.util.List;
 
 public class PaymentDao implements BaseDAO<Payment> {
 
@@ -26,6 +27,11 @@ public class PaymentDao implements BaseDAO<Payment> {
     @Override
     public Payment findById(long id) {
         return null;
+    }
+
+    @Override
+    public List<Payment> findAll() {
+        return List.of();
     }
 
     @Override

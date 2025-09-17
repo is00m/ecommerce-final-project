@@ -3,7 +3,6 @@ package com.iso.ecommerce.dao;
 import com.iso.ecommerce.dao.constants.SqlScriptConstants;
 import com.iso.ecommerce.model.Category;
 import com.iso.ecommerce.model.Product;
-import com.iso.ecommerce.model.User;
 import com.iso.ecommerce.util.DBUtil;
 
 import java.sql.*;
@@ -53,12 +52,32 @@ public class ProductDAO implements BaseDAO<Product> {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
     public Product findById(long id) {
         return null;
+    }
+
+    @Override
+    public List<Product> findAll() {
+        List<Product> products = new ArrayList<>();
+        try (Connection connection = DBUtil.getConnection();
+             Statement s = connection.createStatement()) {
+
+            try (ResultSet rs = s.executeQuery(SqlScriptConstants.PRODUCT_FIND_ALL)) {
+                while (rs.next()) {
+                    products.add(new Product(rs.getLong("id"),
+                            rs.getString("name"),
+                            rs.getBigDecimal("price"),
+                            rs.getInt("stock"),
+                            new Category(rs.getLong("category_id"), rs.getString("category_name"))));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return products;
     }
 
     @Override
@@ -68,6 +87,14 @@ public class ProductDAO implements BaseDAO<Product> {
 
     @Override
     public void delete(long id) {
+        try (Connection connection = DBUtil.getConnection();
+             PreparedStatement ps = connection.prepareStatement(SqlScriptConstants.PRODUCT_DELETE)) {
+
+            ps.setLong(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 }

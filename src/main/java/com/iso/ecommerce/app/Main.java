@@ -1,24 +1,33 @@
 package com.iso.ecommerce.app;
 
 import com.iso.ecommerce.exception.ISOStoreException;
+import com.iso.ecommerce.model.Category;
+import com.iso.ecommerce.model.Order;
+import com.iso.ecommerce.model.Product;
 import com.iso.ecommerce.model.User;
 import com.iso.ecommerce.model.enums.Role;
-import com.iso.ecommerce.services.CustomerService;
-import com.iso.ecommerce.services.UserService;
+import com.iso.ecommerce.services.*;
 import com.iso.ecommerce.util.PasswordUtil;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     private static final Scanner in = new Scanner(System.in);
-    private  static final UserService userService = new UserService();
+    private static final UserService userService = new UserService();
+    private static final CategoryService categoryService = new CategoryService();
+    private static final ProductService productService = new ProductService();
+    private static final OrderService orderService = new OrderService();
+    private static User LOGINED_USER;
+
     public static void main(String[] args) {
 
 
         while (true) {
             getMainMenu();
             String choice = in.nextLine();
-            
+
             try {
                 switch (choice) {
                     case "1":
@@ -33,15 +42,16 @@ public class Main {
                     default:
                         System.out.println("Please select a valid option!");
                 }
-            } catch (ISOStoreException e){
-                System.out.println(e.getMessage());;
+            } catch (ISOStoreException e) {
+                System.out.println(e.getMessage());
+                ;
             }
         }
 
     }
 
     private static void getCustomerMenu() throws ISOStoreException {
-        while (true){
+        while (true) {
             System.out.println("--- CUSTOMER PANEL ---");
             System.out.println("1 - Register");
             System.out.println("2 - Login");
@@ -49,7 +59,7 @@ public class Main {
             System.out.print("Select your login type: ");
             String choice = in.nextLine();
 
-            switch (choice){
+            switch (choice) {
                 case "1":
                     registerCustomer();
                     break;
@@ -65,7 +75,7 @@ public class Main {
     }
 
     private static void getUserMenu() throws ISOStoreException {
-        while (true){
+        while (true) {
             System.out.println("--- USER PANEL ---");
             System.out.println("1 - Register");
             System.out.println("2 - Login");
@@ -73,7 +83,7 @@ public class Main {
             System.out.print("Select your login type: ");
             String choice = in.nextLine();
 
-            switch (choice){
+            switch (choice) {
                 case "1":
                     registerUser();
                     break;
@@ -96,20 +106,103 @@ public class Main {
 
         User loginedUser = userService.login(username, password);
 
-        if (loginedUser != null && loginedUser.getActive()){
+        if (loginedUser != null && loginedUser.getActive()) {
+
+            LOGINED_USER = loginedUser;
 
             getLoginedUserMenu();
         }
     }
 
-    private static void getLoginedUserMenu() {
-        System.out.println("--- ADMIN PANEL ---");
-        System.out.println("1 - Create category");
-        System.out.println("2 - Delete category");
-        System.out.println("3 - Create product");
-        System.out.println("4 - Delete product");
-        System.out.println("0 - Previous");
-        System.out.print("Select your login type: ");
+    private static void getLoginedUserMenu() throws ISOStoreException {
+        while (true) {
+            System.out.println("--- ADMIN PANEL ---");
+            System.out.println("1 - Create category");
+            System.out.println("2 - Delete category");
+            System.out.println("3 - Category List");
+            System.out.println("4 - Create product");
+            System.out.println("5 - Delete product");
+            System.out.println("6 - Product list");
+            System.out.println("7 - Order list");
+            System.out.println("0 - Previous");
+            System.out.print("Select your login type: ");
+            String choice = in.nextLine();
+
+            switch (choice) {
+                case "1":
+                    createCategory();
+                    break;
+                case "2":
+                    deleteCategory();
+                    break;
+                case "3":
+                    listCategory();
+                    break;
+                case "4":
+                    createProduct();
+                    break;
+                case "5":
+                    deleteProduct();
+                    break;
+                case "6":
+                    listProduct();
+                    break;
+                case "7":
+                    listOrder();
+                    break;
+                case "0":
+                    return;
+                default:
+                    System.out.println("Please select a valid option!");
+            }
+        }
+    }
+
+    private static void listOrder() {
+        List<Order> orderList = orderService.getAll();
+    }
+
+    private static void listProduct() {
+        List<Product> productList = productService.getAll();
+        productList.forEach(product ->
+                System.out.printf("%s : %s : %s \n", product.getCategory().getName(), product.getName(), product.getPrice()));
+    }
+
+    private static void deleteProduct() {
+        System.out.print("Enter product ID to delete: ");
+        String productId = in.nextLine();
+        productService.deleteId(Long.parseLong(productId));
+    }
+
+    private static void createProduct() throws ISOStoreException {
+        System.out.print("Enter product name: ");
+        String productName = in.nextLine();
+        System.out.print("Enter product price: ");
+        String productPrice = in.nextLine();
+        System.out.print("Enter product stock: ");
+        String productStock = in.nextLine();
+        System.out.print("Enter category ID: ");
+        String categoryId = in.nextLine();
+
+        Category category = categoryService.getById(Long.parseLong(categoryId));
+        Product product = new Product(productName, new BigDecimal(productPrice), Integer.parseInt(productStock), category);
+        productService.save(product, LOGINED_USER);
+    }
+
+    private static void listCategory() {
+        List<Category> categoryList = categoryService.getall();
+        categoryList.forEach(System.out::println);
+    }
+
+    private static void deleteCategory() {
+        System.out.print("Enter category ID: ");
+        String categoryId = in.nextLine();
+
+        categoryService.deleteById(Long.parseLong(categoryId));
+    }
+
+    private static void createCategory() throws ISOStoreException {
+        throw new ISOStoreException("NOT IMPLEMENTED!");
     }
 
     private static void registerUser() throws ISOStoreException {
@@ -122,7 +215,7 @@ public class Main {
 
         Role role = Role.valueOf(roleStr);
         User user = new User(username, PasswordUtil.hash(password), role);
-        userService.save(username,password,role);
+        userService.save(username, password, role);
     }
 
     private static void getMainMenu() {
